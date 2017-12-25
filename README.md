@@ -1,6 +1,6 @@
 # -
 宏基因组分析流程
 
-宏基因组分析流程来源于Mocat软件，该软件集成了一些二代测序分析软件：如fastqc、metagenemakr、cd-hit等等。
+宏基因组分析流程来源于Mocat软件，该软件集成了一些二代测序分析软件：如fastqc、metagenemark、cd-hit等等。
 
 该流程将肠道菌群的illumina测序数据进行处理：从指控到生成丰度表（物种丰度表、基因丰度表）和基因集。
