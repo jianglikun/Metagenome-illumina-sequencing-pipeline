@@ -1,0 +1,17 @@
+在利用metagenemark预测出基因集之后，序列不是标准的fasta格式，而且序列信息过少
+metagenemark只需要输出lst文件就可以了（也可以输出fna，faa文件）
+利用perl脚本在lst文件中提取信息：
+
+jlk_MOCATGenePredictionMetaGeneMark_aux.pl
+
+该脚本的参数：
+第一个是sample_name
+第二个是metagenemakr的结果lst文件
+第三个是该脚本所需要的几个perl模块所在的目录（MOCATCore.pm  MOCATUsage2.pm  MOCATVariables.pm）
+
+举个例子：
+首先我将perl模块放在sscript之中
+
+perl jlk_MOCATGenePredictionMetaGeneMark_aux.pl 170306-01 170306-01_metagenemark.lst ./sscript/
+
+之后会输出170306-01.fna/170306-01.faa/170306-01.tab三个文件
