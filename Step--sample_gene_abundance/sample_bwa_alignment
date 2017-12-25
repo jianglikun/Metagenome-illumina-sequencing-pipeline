@@ -1,0 +1,21 @@
+在之前生成的基因集的基础上：sum_gene_cluster_screen.fna
+
+我们利用bwa比对得到readcount
+首先建立：index
+
+bwa index sum_gene_cluster_screen.fna
+
+比对：
+
+bwa mem -t 8 sum_gene_cluster_screen.fna  screen_170306-01.1.fq.gz screen_170306-01.2.fq.gz > 170627-01.sam
+
+
+把得到的比对sam文件转化为丰富文件：
+提前准备gene_length文件：
+grep ">" sum_gene_cluster_screen.fna |awk '{print $1,$5}'|sed 's/>//'|sed 's/length://'|sed 's/ /\t/' > gene_length
+
+利用python脚本将sam文件转化为丰度文件：
+python sam2abund.py --sam 170627-01.sam --genelength gene_length
+
+输出两个文件：170627-01.tpm.txt   170627-01.readCount.txt
+之后用于MGS分簇的文件就是利用170627-01.tpm.txt abundance丰度文件做的。
