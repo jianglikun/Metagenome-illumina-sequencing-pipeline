@@ -1,0 +1,45 @@
+下载地址：
+https://github.com/weizhongli/cdhit/releases
+
+下载4.7版本的时候不能make，所以下载4.6版本
+$wget https://github.com/weizhongli/cdhit/releases/download/V4.6.6/cd-hit-v4.6.6-2016-0711.tar.gz
+
+解压：
+$tar zxvf  cd-hit-v4.6.6-2016-0711.tar.gz
+
+$cd cd-hit-v4.6.6-2016-0711
+
+make
+
+./cd-hit-est
+
+ok！
+
+
+使用：
+1、每个样本都会注释得到自己的gene 数据，每个样本分开来做，最后将单个样本的基因集合并到一起就可以了：
+/cdhit/cd-hit-v4.6.6-2016-0711/cd-hit-est -i 样本gene_data  -c 0.95 -T 8 -M 0 -G 0 -aS 0.9 -g 1 -r 1 -d 0 -o 去冗余之后的gene_data.fna > clusters.log
+然后将去冗余之后的gene_data.fna转换格式
+perl fasta2tabdel.pl sample_gene_cluster.fna
+
+生成sample_gene_cluster.fna.tabdel
+
+
+剔除序列长度小于100的gene：
+awk -F"\t" '{if(length($2)>=100){print}}' sample_gene_cluster.fna.tabdel | sed 's/\t/\n/' > sum_gene_cluster_screen.fna
+
+
+
+2、使用之前先将各个样本生成的fna gene文件cat到一起也就是sum_gene.fna
+
+$MC_BIN/cd-hit-est -i $CLUSTERS.IN -c 0.95 -T $MC_CPU -M 0 -G 0 -aS 0.9 -g 1 -r 1 -d 0 -o $CLUSTERS
+.OUT > $CLUSTERS.log
+(./cdhit/cd-hit-v4.6.6-2016-0711/cd-hit-est -i sum_gene.fna -c 0.95 -T 8 -M 0 -G 0 -aS 0.9 -g 1 -r 1 -d 0 -o sum_gene_cluster.fna > clusters.log)
+
+然后将sum_gene.fna转换格式
+perl fasta2tabdel.pl sum_gene_cluster.fna
+
+生成sum_gene_cluster.fna.tabdel
+
+剔除序列长度小于100的gene：
+awk -F"\t" '{if(length($2)>=100){print}}' sum_gene_cluster.fna.tabdel | sed 's/\t/\n/' > sum_gene_cluster_screen.fna
