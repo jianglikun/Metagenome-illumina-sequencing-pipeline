@@ -1,0 +1,11 @@
+metaphlan2安装使用：
+https://bitbucket.org/biobakery/metaphlan2
+
+~/metaphlan2/metaphlan2.py --input_type fastq ./data/170627-1_R1.fastq,./data/170627-1_R2.fastq --mpa_pkl ~/metaphlan2/db_v20/mpa_v20_m200.pkl --bowtie2db ~/metaphlan2/db_v20/mpa_v20_m200 --nproc 32 --biom 170627_1.biom  --bowtie2out test.bowtie> profiled_metagenome.txt
+
+
+如果是压缩的paired文件：
+~/metaphlan2/metaphlan2.py --input_type fastq <(zcat screen_170306_03.1.fq.gz screen_170306_03.2.fq.gz) --mpa_pkl ~/metaphlan2/db_v20/mpa_v20_m200.pkl --bowtie2db ~/metaphlan2/db_v20/mpa_v20_m200 --nproc 32 --biom 170306-03.biom --bowtie2out 170306-03_test.bowtie>170306-03_profiled_metagenome.txt
+
+由于生成的biom格式有问题，需要脚本修改：
+ sed 's#\"type\":[ ]null#\"type\": \"OTU table\"#g' 170627_1.biom > changed_170627_1.biom
