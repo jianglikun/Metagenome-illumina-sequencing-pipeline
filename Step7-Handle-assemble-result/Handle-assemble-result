@@ -1,0 +1,10 @@
+1、通过soapdenove组装得到scafSeq文件，但是该文件里的scaf序列包含N，需要用脚本处理得到，长度大于500，并且无N的序列。
+
+perl MOCATAssembly_getScaf.pl $lengthcutoff $out_path/$sample/temp/$sample.scafSeq $sample > $out_path/$sample/assembly.$reads.$mode.K$kmer/$sample.scaftig
+(perl MOCATAssembly_getScaf.pl 500 soap_runout.scafSeq R030 > R030.scaftig)
+
+
+2、计算N50等统计数据
+
+perl $cwd/src/MOCATAssembly_stats.pl $out_path/$sample/temp/$sample.contig $out_path/$sample/temp/$sample.scafSeq $out_path/$sample/assembly.$reads.$mode.K$kmer/$sample.scaftig $out_path/$sample/assembly.$reads.$mode.K$kmer/$sample.stats $cwd/src
+（perl MOCATAssembly_stats.pl soap_runout.scafSeq R030.scaftig R030.stats ./(脚本所在位置)）
