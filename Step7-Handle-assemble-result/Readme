@@ -1,0 +1,2 @@
+1、通过soapdenove组装得到scafSeq文件，但是该文件里的scaf序列包含N，需要用脚本MOCATAssembly_getScaf.pl处理得到，长度大于500，并且无N的序列。
+2、通过脚本统计组装结果MOCATAssembly_stats.pl
