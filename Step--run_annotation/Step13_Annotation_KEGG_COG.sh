@@ -1,0 +1,55 @@
+我们已经得到每个样本的非冗余基因集，此时我们可以通过该基因集注释到相应的KO与COG
+
+首先看一下KEGG数据库：KEGG.pep（6.5G）
+$head KEGG.pep
+>aaa:Acav_0001
+MTEEPSRSPDFDTDADPGQGLWQACVEQLAQDLPEQQFNTWIKPLVAQVAPDFSKVTLLV
+ANRFKLDWIRAQYAGRITALLEGLYGQPVTLELALAQRESVTRTVVRPVVQQPTAPAETP
+IGSTPADEPAAAPFRSRLNPALTFETLVEGTANRMARSAAMHVAGSPGHLYNPLFIYGGV
+GLGKTHLVHAVGNRLLQDKPDAKVLYIHAEQFVSDVVKAYQRRTFDEFKAHYHSLDLLLI
+DDVQFFANKDRTQEEFFNAFEALLAKKSHIVMTSDTYPKGLANIHERLVSRFDSGLTVTI
+EPPELEMRVAILINKARAESAEMPEEVAFFVAKNVRSNVRELEGALRKILAYSRFNQKEV
+SIQLAREALRDLLSIQNRQISVENIQKTVADYYKIKVADMYSKKRPASIARPRQIAMYLA
+KELTQKSLPEIGELFGGRDHTTVLHAVRKIAGERQQLTELNQQLHVLEQTLKG
+>aaa:Acav_0002
+
+它实际上就是一个蛋白质数据，爬虫地址：http://www.genome.jp/dbget-bin/www_bfind_sub?mode=bfind&max_hit=50000&dbkey=orthology&keywords=k
+但是不是每一条蛋白都有其对应的KO,此处挑出有KO的蛋白：
+KEGG.ko.pep
+$head KEGG.ko.pep
+>hsa:5462
+MAGHLASDFAFSPPPGGGGDGPWGAEPGWVDPLTWLSFQGPPGGPGIGPGVGPGSEVWGI
+PPCPPPYELCGGMAYCGPQVGVGLVPQGGLETSQPESEAGVGVESNSNGASPEPCTVPPG
+AVKLEKEKLEQNPEKSQDIKALQKELEQFAKLLKQKRITLGYTQADVGLILGVLFGKVFS
+QKTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLMQARKRKRTSIENR
+VRGNLENLFLQCPKPTLQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAA
+GSPFSGGPVSFPPAPGPHFGTPGYGSPHFTALYSSVPFPEGEVFPPVSVITLGSPMHSN
+>hsa:3274
+MAPNGTASSFCLDSTACKITITVVLAVLILITVAGNVVVCLAVGLNRRLRNLTNCFIVSL
+AITDLLLGLLVLPFSAIYQLSCKWSFGKVFCNIYTSLDVMLCTASILNLFMISLDRYCAV
+
+序列对应的KO信息：
+$head KEGG.all.ko.assigned.xls
+hsa:5462	K09367 POU5F; POU domain transcription factor, class 5
+hsa:3274	K04150 HRH2; histamine receptor H2
+hsa:5456	K09365 POU3F, OTF; POU domain transcription factor, class 3
+hsa:8471	K17446 IRS4; insulin receptor substrate 4
+hsa:2303	K09396 FOXC; forkhead box protein C
+hsa:377630	K11845 USP17, DUB3; ubiquitin carboxyl-terminal hydrolase 17 [EC:3.4.19.12]
+hsa:341392	K01896 ACSM; medium-chain acyl-CoA synthetase [EC:6.2.1.2]
+hsa:57132	K12197 CHMP1, VPS46, DID2; charged multivesicular body protein 1
+hsa:285231	K10267 FBXW12S; F-box and WD-40 domain protein 12/13/14/15/16/17/19
+hsa:728386	K11845 USP17, DUB3; ubiquitin carboxyl-terminal hydrolase 17 [EC:3.4.19.12]
+
+1、利用diamond的blastp比对就可以得到，该样本的这些基因在哪些KO丰度高，哪些通路富集了
+/k11e/pvdisk/fastbase/Users/liangxiangzhi/docker/Annotation/KEGG/scripts/bin/diamond blastp -v --sensitive -p 8 -t ./ -d /k11e/pvdisk/bigbase/Databases/AnnoDatabase/KEGG/kegg.filter/KEGG -k 5 -q 170306-01.fna -a 170306-01-kegg > 170306-01-kegg.log
+
+2、此时输出170306-01-kegg.daa 是一个二进制文件，需要view转化为标准格式
+
+/k11e/pvdisk/fastbase/Users/liangxiangzhi/docker/Annotation/KEGG/scripts/bin/diamond view -a 170306-01-kegg -o 170306-01-kegg.diamond.blastp
+
+
+3、挑选最有的blastp结果：
+需要kegg info文件：KEGG.all.ko.assigned.xls
+
+$perl blast.anno.select.best.pl 170306-01-kegg.diamond.blastp /k11e/pvdisk/bigbase/Databases/AnnoDatabase/KEGG/kegg.filter/KEGG.all.ko.assigned.xls 170306-01.KEGG.anno.xls
