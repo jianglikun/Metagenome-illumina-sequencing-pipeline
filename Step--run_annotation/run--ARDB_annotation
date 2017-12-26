@@ -1,0 +1,18 @@
+我们利用每个样本的非冗余基因集蛋白文件寻找抗药基因：
+
+$perl ardbAnno.pl 170306-01.faa 1701 ./ardbAnno1.0/  ./
+此脚本四个参数：
+第一个就是样本的非冗余基因集的蛋白质文件
+第二个就是sample——name （随便一个就行，不是脚本里的变量）
+第三个是ARDB数据库（网址：https://ardb.cbcb.umd.edu/，下载ardbAnno1.0.tar.gz文件就可以得到，数据库在blastdb里边）
+第四个参数是输出目录，之后输出三个文件 1701.anno  1701.balstp output.xls
+
+
+之后利用perl脚本挑出耐药信息：
+perl select.pl output.xls 1701.anno.xls
+
+输入的是之前的output.xls 输出1701.anno.xls
+
+
+同时官网也提供了ardbAnno.pl，此脚本可直接运行：perl ardbAnno.pl
+前提是在genomeList.tab文件中加上fasta文件路径，但是此脚本只能处理一条序列，之上脚本是lxz修改之后的
